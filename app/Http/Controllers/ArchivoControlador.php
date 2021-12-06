@@ -15,8 +15,8 @@ class ArchivoControlador extends Controller
      */
     public function index()
     {
-        $elementos = Archivo::all();
-        return $elementos;
+        $datos = Archivo::all();
+        return $datos;
     }
 
     /**
@@ -37,19 +37,19 @@ class ArchivoControlador extends Controller
      */
     public function store(Request $request)
     {
-        $elemento = new Archivo();
-        $elemento->nombre = $request->nombre;
-        $elemento->ref = $request->ref;
-        $elemento->titulo = $request->titulo;
-        $elemento->comentario = $request->comentario;
+        $dato = new Archivo();
+        $dato->nombre = $request->nombre;
+        $dato->ref = $request->ref;
+        $dato->titulo = $request->titulo;
+        $dato->comentario = $request->comentario;
 
         $archivo = $request->file('archivo');
         $nombre = date('YmdHis') . '.' . $archivo->getClientOriginalExtension();
         $archivo->move('assets/', $nombre);
-        $elemento->archivo = $nombre;
+        $dato->archivo = $nombre;
 
-        $elemento->save();
-        return $elemento;
+        $dato->save();
+        return $dato;
     }
 
     /**
@@ -71,8 +71,8 @@ class ArchivoControlador extends Controller
      */
     public function edit($id)
     {
-        $elemento = Archivo::find($id);
-        return $elemento;
+        $dato = Archivo::find($id);
+        return $dato;
     }
 
     /**
@@ -84,28 +84,28 @@ class ArchivoControlador extends Controller
      */
     public function update(Request $request, $id)
     {
-        $elemento = Archivo::find($id);
-        $elemento->nombre = $request->nombre;
-        $elemento->ref = $request->ref;
-        $elemento->titulo = $request->titulo;
-        $elemento->comentario = $request->comentario;
+        $dato = Archivo::find($id);
+        $dato->nombre = $request->nombre;
+        $dato->ref = $request->ref;
+        $dato->titulo = $request->titulo;
+        $dato->comentario = $request->comentario;
 
         if ($request->hasFile('archivo')) {
             $archivo = $request->file('archivo');
             $nombre = date('YmdHis') . '.' . $archivo->getClientOriginalExtension();
             $archivo->move('assets/', $nombre);
 
-            $path = 'assets/' . $elemento->archivo;
+            $path = 'assets/' . $dato->archivo;
 
             if (File::exists($path)) {
                 File::delete($path);
             }
             
-            $elemento->archivo = $nombre;
+            $dato->archivo = $nombre;
         }
 
-        $elemento->save();
-        return $elemento;
+        $dato->save();
+        return $dato;
     }
 
     /**
@@ -116,21 +116,21 @@ class ArchivoControlador extends Controller
      */
     public function destroy($id)
     {
-        $elemento = Archivo::find($id);
+        $dato = Archivo::find($id);
 
-        $path = 'assets/' . $elemento->archivo;
+        $path = 'assets/' . $dato->archivo;
 
         if (File::exists($path)) {
             File::delete($path);
         }
 
-        $elemento->delete();
+        $dato->delete();
         return $id;
     }
 
     public function obtenerPorRef($ref)
     {
-        $elementos = Archivo::where('ref', $ref)->get();
-        return $elementos;
+        $datos = Archivo::where('ref', $ref)->get();
+        return $datos;
     }
 }
